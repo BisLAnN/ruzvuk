@@ -1,8 +1,5 @@
 [build]
   builder = "nixpacks"
-  
-  [[build.noxpacks.plan.steps]]
-  uses = ["python:3.11"]
 
 [deploy]
-  startCommand = "gunicorn app:app --bind 0.0.0.0:$PORT"
+  startCommand = "gunicorn app:app"
