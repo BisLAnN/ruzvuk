@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruzvuk - веб-приложение для генерации музыки с помощью нейросетей</title>      
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="topHeader">
+        <div class="logoBlock">
+            <h1 class="mainTitle">Ruzvuk</h1>
+            <p class="subtitleText">веб-приложение для генерации музыки с помощью нейросетей</p>
+        </div>
+        <nav class="topNavigation">
+            <button class="navigationButton navigationButtonActive">Создать</button>
+            <button class="navigationButton">Результаты</button>
+            <button class="navigationButton">Редактор</button>
+        </nav>
+    </header>
+
+    <main class="mainContainer">
+        <section class="sectionBlock">
+            <h2 class="sectionTitle">Готовые шаблоны</h2>
+            <div class="presetsGrid">
+                <button class="presetCard presetCardActive" data-genre="ambient" data-mood="calm">
+                    <h3>Ambient chill</h3>
+                    <p>Расслабляющая атмосфера с мягким синтезатором</p>
+                </button>
+                <button class="presetCard" data-genre="orchestral" data-mood="drama">
+                    <h3>Epic Orchestral</h3>
+                    <p>Оркестровая музыка с мощными струнными</p>
+                </button>
+                <button class="presetCard" data-genre="pop" data-mood="happy">
+                    <h3>Upbeat pop</h3>
+                    <p>Весёлая поп-музыка для танцев</p>
+                </button>
+                <button class="presetCard" data-genre="jazz" data-mood="soft">
+                    <h3>Jazz lounge</h3>
+                    <p>Элегантный джаз с саксофоном и трубой</p>
+                </button>
+            </div>
+        </section>
+
+        <section class="sectionBlock gridLayout">
+            <div class="controlPanel">
+                <h2 class="sectionTitle">Жанр</h2>
+                <div class="chipGroup" id="genreChipGroup">
+                    <button class="chipButton">Классика</button>
+                    <button class="chipButton">Рок</button>
+                    <button class="chipButton chipButtonActive">Поп</button>
+                    <button class="chipButton">Модерн</button>
+                    <button class="chipButton">Джаз</button>
+                    <button class="chipButton">Кантри</button>
+                </div>
+
+                <div class="inputField">
+                    <label class="fieldLabel">Длительность: <span id="lengthLabel">2 минуты</span></label>
+                    <input type="range" id="lengthSlider" min="1" max="5" step="1" value="2">
+                </div>
+
+                <div class="inputField">
+                    <span class="fieldLabel">Инструменты</span>
+                    <div class="chipGroup" id="instrumentChipGroup">
+                        <button class="chipButton chipButtonActive">Электронные</button>
+                        <button class="chipButton">Акустические</button>
+                        <button class="chipButton">Оркестровые</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controlPanel">
+                <h2 class="sectionTitle">Настроение</h2>
+                <div class="chipGroup" id="moodChipGroup">
+                    <button class="chipButton chipButtonActive">Радость</button>
+                    <button class="chipButton">Грусть</button>
+                    <button class="chipButton">Энергия</button>
+                    <button class="chipButton">Спокойствие</button>
+                    <button class="chipButton">Мечтательность</button>
+                    <button class="chipButton">Драма</button>
+                </div>
+
+                <div class="inputField">
+                    <label class="fieldLabel">Темп: <span id="tempoLabel">120 BPM</span></label>
+                    <input type="range" id="tempoSlider" min="60" max="180" step="5" value="120">
+                </div>
+
+                <div class="inputField">
+                    <label for="descriptionInput" class="fieldLabel">Кратко опишите</label>
+                    <textarea id="descriptionInput" rows="3"
+                        placeholder="Например: лёгкая фоновая музыка с нотками природы"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section class="sectionBlock">
+            <button id="generateMusicButton" class="primaryButton">Сгенерировать музыку</button>
+            <p id="generationResult" class="resultText"></p>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

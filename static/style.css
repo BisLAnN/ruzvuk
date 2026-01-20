@@ -1,0 +1,298 @@
+:root {
+    --mainBgColor: #ffffff;
+    --panelBgColor: #f4fdf2;
+    --primaryColor: #2e5b32;
+    --primarySoftColor: rgba(46, 91, 50, 0.1);
+    --mainTextColor: #2e5b32;
+    --mutedTextColor: #4a7b50;
+    --chipBgColor: #ffffff;
+    --chipActiveBgColor: #2e5b32;
+    --chipActiveTextColor: #ffffff;
+    --borderRadius: 10px;
+    --transitionSpeed: 0.2s ease;
+    --softShadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--mainBgColor);
+    color: var(--mainTextColor);
+    min-height: 100vh;
+}
+
+.topHeader {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 16px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logoBlock {
+    margin-bottom: 8px;
+}
+
+.mainTitle {
+    margin: 0;
+    font-size: clamp(26px, 4vw, 36px);
+    letter-spacing: 1px;
+    color: var(--mainTextColor);
+}
+
+.subtitleText {
+    margin: 2px 0 0;
+    color: var(--mutedTextColor);
+    font-size: 14px;
+}
+
+.topNavigation {
+    display: flex;
+    gap: 8px;
+}
+
+.navigationButton {
+    border: 2px solid var(--primaryColor);
+    background: #ffffff;
+    color: var(--mainTextColor);
+    padding: 8px 18px;
+    border-radius: var(--borderRadius);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all var(--transitionSpeed);
+    font-weight: 500;
+}
+
+.navigationButtonActive,
+.navigationButton:hover {
+    background: var(--primaryColor);
+    color: #ffffff;
+}
+
+.mainContainer {
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    padding: 0 16px 30px;
+}
+
+.sectionBlock {
+    margin-top: 20px;
+}
+
+.sectionTitle {
+    font-size: 18px;
+    margin: 0 0 12px;
+    color: var(--mainTextColor);
+}
+
+.presetsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+}
+
+.presetCard {
+    border-radius: var(--borderRadius);
+    background: var(--panelBgColor);
+    border: 2px solid #d4e8d0;
+    padding: 12px 14px;
+    text-align: left;
+    color: var(--mainTextColor);
+    cursor: pointer;
+    box-shadow: var(--softShadow);
+    transition: all var(--transitionSpeed);
+}
+
+.presetCard h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+    color: var(--mainTextColor);
+}
+
+.presetCard p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--mutedTextColor);
+}
+
+.presetCard:hover {
+    transform: translateY(-2px);
+    border-color: var(--primaryColor);
+    box-shadow: 0 15px 30px rgba(46, 91, 50, 0.15);
+}
+
+.presetCardActive {
+    background: #ffffff;
+    border-color: var(--primaryColor);
+    box-shadow: 0 0 0 3px rgba(46, 91, 50, 0.1);
+}
+
+.gridLayout {
+    display: grid;
+    grid-template-columns: 1.1fr 1.1fr;
+    gap: 20px;
+}
+
+.controlPanel {
+    background: var(--panelBgColor);
+    border-radius: var(--borderRadius);
+    padding: 16px 18px 18px;
+    box-shadow: var(--softShadow);
+    border: 2px solid #d4e8d0;
+}
+
+.chipGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chipButton {
+    border-radius: 999px;
+    border: 2px solid #d4e8d0;
+    background: var(--chipBgColor);
+    color: var(--mainTextColor);
+    padding: 7px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all var(--transitionSpeed);
+}
+
+.chipButton:hover {
+    transform: translateY(-1px);
+    border-color: var(--primaryColor);
+}
+
+.chipButtonActive {
+    background: var(--primaryColor);
+    color: var(--chipActiveTextColor);
+    border-color: var(--primaryColor);
+}
+
+.inputField {
+    margin-top: 16px;
+}
+
+.fieldLabel {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: var(--mutedTextColor);
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: var(--primaryColor);
+    border-radius: 5px;
+}
+
+textarea {
+    width: 100%;
+    background: #ffffff;
+    border: 2px solid #d4e8d0;
+    border-radius: var(--borderRadius);
+    padding: 12px 14px;
+    resize: vertical;
+    min-height: 70px;
+    color: var(--mainTextColor);
+    font-family: inherit;
+    font-size: 13px;
+    transition: border-color var(--transitionSpeed), box-shadow var(--transitionSpeed);
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--primaryColor);
+    box-shadow: 0 0 0 3px var(--primarySoftColor);
+}
+
+.primaryButton {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px 18px;
+    border-radius: var(--borderRadius);
+    border: 2px solid var(--primaryColor);
+    background: #ffffff;
+    color: var(--primaryColor);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--softShadow);
+    transition: all var(--transitionSpeed);
+}
+
+.primaryButton:hover {
+    transform: translateY(-2px);
+    background: var(--primaryColor);
+    color: #ffffff;
+    box-shadow: 0 15px 35px rgba(46, 91, 50, 0.25);
+}
+
+.primaryButton:active {
+    transform: translateY(0);
+}
+
+.resultText {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--mutedTextColor);
+}
+
+.download-link {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 8px 16px;
+    background: #10b981;
+    color: #ffffff !important;
+    text-decoration: none;
+    border-radius: var(--borderRadius);
+    font-weight: 600;
+    border: 2px solid #10b981;
+    transition: all var(--transitionSpeed);
+}
+
+.download-link:hover {
+    transform: translateY(-1px);
+    background: #059669;
+    border-color: #059669;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+@media (max-width: 800px) {
+    .gridLayout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .topHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .topNavigation {
+        width: 100%;
+    }
+
+    .topNavigation .navigationButton {
+        flex: 1;
+        text-align: center;
+    }
+
+    .controlPanel {
+        padding: 14px 12px 16px;
+    }
+
+    .presetsGrid {
+        grid-template-columns: 1fr;
+    }
+}
