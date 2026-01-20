@@ -1,0 +1,268 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    background-color: #f4fdf2;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    min-height: 550px;
+}
+
+.welcome-section {
+    flex: 1;
+    background: #f4fdf2;
+    color: #2e5b32;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: all 0.5s ease;
+}
+
+.welcome-content {
+    max-width: 320px;
+}
+
+.welcome-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #2e5b32;
+}
+
+.welcome-section p {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    color: #2e5b32;
+}
+
+.illustration {
+    font-size: 8rem;
+    margin-bottom: 20px;
+    color: #2e5b32;
+}
+
+.forms-section {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: #f4fdf2;
+}
+
+.form-wrapper {
+    position: relative;
+    width: 100%;
+    height: 500px;
+}
+
+.form-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease;
+}
+
+.form-container.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.form-container.login-form {
+    transform: translateX(-100%);
+}
+
+.form-container.login-form.active {
+    transform: translateX(0);
+}
+
+.form {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-title {
+    font-size: 2rem;
+    color: #2e5b32;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #2e5b32;
+    font-size: 1.2rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px 15px 15px 50px;
+    border: 2px solid #d4e8d0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #ffffff;
+}
+
+.input-group input:focus {
+    border-color: #2e5b32;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 91, 50, 0.1);
+    background: #ffffff;
+}
+
+.btn {
+    background: #ffffff;
+    color: #2e5b32;
+    border: 2px solid #2e5b32;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(46, 91, 50, 0.2);
+    background: #2e5b32;
+    color: #ffffff;
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.switch-form {
+    text-align: center;
+    margin-top: 25px;
+    color: #2e5b32;
+}
+
+.switch-form a {
+    color: #2e5b32;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid #d4e8d0;
+    display: inline-block;
+}
+
+.switch-form a:hover {
+    background: #2e5b32;
+    color: #ffffff;
+    border-color: #2e5b32;
+}
+
+
+.message {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    display: none;
+}
+
+.error-message {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    border: 1px solid #ff9999;
+}
+
+.success-message {
+    background: #e8f5e5;
+    color: #2e5b32;
+    border: 2px solid #2e5b32;
+}
+
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        max-width: 500px;
+    }
+
+    .welcome-section {
+        padding: 30px;
+        min-height: 200px;
+    }
+
+    .welcome-section h1 {
+        font-size: 2rem;
+    }
+
+    .illustration {
+        font-size: 5rem;
+    }
+
+    .forms-section {
+        padding: 30px;
+    }
+
+    .form-wrapper {
+        height: 450px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .welcome-section,
+    .forms-section {
+        padding: 25px;
+    }
+
+    .welcome-section h1 {
+        font-size: 1.8rem;
+    }
+
+    .form-title {
+        font-size: 1.6rem;
+    }
+
+    .illustration {
+        font-size: 4rem;
+    }
+}

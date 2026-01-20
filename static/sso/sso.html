@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruzvuk ID</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="sso_style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-section">
+            <div class="welcome-content">
+                <div class="illustration">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h1>Добро пожаловать!</h1>
+                <p>Войдите в свою учетную запись или зарегистрируйтесь, чтобы получить доступ ко всем возможностям нашего сервиса.</p>
+            </div>
+        </div>
+        
+        <div class="forms-section">
+            <div class="form-wrapper">
+                <div class="form-container login-form active">
+                    <div class="message error-message" id="login-error"></div>
+                    <div class="message success-message" id="login-success"></div>
+                    
+                    <form class="form" id="loginForm">
+                        <h2 class="form-title">Вход в аккаунт</h2>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="login-username" placeholder="имя пользователя" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="login-password" placeholder="пароль" required>
+                        </div>
+                        
+                        <button type="submit" class="btn">Войти</button>
+                        
+                        <div class="switch-form">
+                            Ещё не зарегистрированы? <a id="show-register">Создать аккаунт</a>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="form-container register-form">
+                    <div class="message error-message" id="register-error"></div>
+                    <div class="message success-message" id="register-success"></div>
+                    
+                    <form class="form" id="registerForm">
+                        <h2 class="form-title">Регистрация</h2>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="register-username" placeholder="имя пользователя" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="register-email" placeholder="email" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="register-password" placeholder="пароль" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="register-confirm-password" placeholder="подтвердите пароль" required>
+                        </div>
+                        
+                        <button type="submit" class="btn">Зарегистрироваться</button>
+                        
+                        <div class="switch-form">
+                            Уже есть аккаунт? <a id="show-login">Войти</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="sso_script.js"></script>
+</body>
+</html>

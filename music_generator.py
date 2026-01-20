@@ -53,7 +53,7 @@ class ProMusicGenerator:
         instr = self.get_instrument(instrument)
         env = self.adsr_envelope(t, instr['attack'], instr['decay'])
         
-        # Основные гармоники
+
         for i, harmonic_vol in enumerate(instr['harmonics'][:3]):
             harmonic_freq = freq * (i + 1)
             wave = self.get_waveform(t, harmonic_freq, instr['waveform'])
@@ -79,7 +79,7 @@ class ProMusicGenerator:
         
         beats = int(duration / beat_duration)
         for beat in range(beats):
-            # Кик (каждый бит)
+
             if beat % 1 == 0:
                 start = int(beat * beat_duration * self.sample_rate)
                 kick_t = np.linspace(0, 0.2, int(0.2 * self.sample_rate))
@@ -88,7 +88,7 @@ class ProMusicGenerator:
                 if start + len(kick) < total_samples:
                     drums[start:start+len(kick)] += kick * 0.4
             
-            # Снэр (2 и 4)
+
             if beat % 2 == 0:
                 snare_start = int((beat + 0.5) * beat_duration * self.sample_rate)
                 snare_t = np.linspace(0, 0.15, int(0.15 * self.sample_rate))
@@ -99,17 +99,17 @@ class ProMusicGenerator:
         return drums
     
     def generate_bassline(self, scale, duration, tempo_bpm):
-        """Бас линия"""
+
         beat_duration = 60.0 / tempo_bpm
         total_samples = int(self.sample_rate * duration)
         bass = np.zeros(total_samples)
         
         beats = int(duration / beat_duration)
-        bass_pattern = [0, 0, 1, 0, 1, 0, 0, 1]  # типичный бас паттерн
+        bass_pattern = [0, 0, 1, 0, 1, 0, 0, 1]
         
         for beat in range(beats):
             if bass_pattern[beat % len(bass_pattern)]:
-                freq = random.choice(scale) * 0.5  # октава ниже
+                freq = random.choice(scale) * 0.5 
                 start = int(beat * beat_duration * self.sample_rate)
                 note = self.generate_note(freq, beat_duration * 0.7, 'электронные', 0.35)
                 if start + len(note) < total_samples:
@@ -118,18 +118,18 @@ class ProMusicGenerator:
         return bass
     
     def generate_melody(self, scale, duration, instrument, complexity=0.6):
-        """Умная мелодия с прогрессией"""
-        beat_duration = 0.5  # половина бита для мелодии
+
+        beat_duration = 0.5
         total_samples = int(self.sample_rate * duration)
         melody = np.zeros(total_samples)
         
         beats = int(duration / beat_duration)
-        chord_progression = [0, 3, 4, 5]  # I-IV-V-vi
+        chord_progression = [0, 3, 4, 5]
         
         for beat in range(0, beats, 2):
-            # Основная нота аккорда
+
             root = scale[chord_progression[beat % 4 % len(chord_progression)]]
-            freq = root * random.choice([1, 1.5, 2])  # основа, терция, квинта
+            freq = root * random.choice([1, 1.5, 2])
             
             start = int(beat * beat_duration * self.sample_rate)
             note_dur = beat_duration * random.choice([0.8, 1.2, 1.6]) * (1 + complexity)
@@ -146,33 +146,32 @@ class ProMusicGenerator:
         duration = length_min * 60
         total_samples = int(self.sample_rate * duration)
         
-        # Гамма по жанру
+
         scale_notes = self.scales.get(genre.lower(), self.scales['поп'])
         scale = [self.note_freqs[note] for note in scale_notes]
         
-        # МУЛЬТИСЛОЙНАЯ КОМПОЗИЦИЯ
+
         drums = self.generate_drums(duration, tempo_bpm)
         bass = self.generate_bassline(scale, duration, tempo_bpm)
         melody = self.generate_melody(scale, duration, instrument)
         
-        # МИКС
+
         mix = melody * 0.5 + bass * 0.4 + drums * 0.35
         
-        # ЭФФЕКТЫ
-        # Легкий реверб
+
         reverb = np.roll(mix * 0.2, int(0.1 * self.sample_rate))
         mix += reverb * np.linspace(1, 0.2, len(mix))
         
-        # Стерео панорамирование
+
         left = mix * np.linspace(0.8, 1.0, len(mix))
         right = mix * np.linspace(1.0, 0.8, len(mix))
         stereo = np.stack((left, right), axis=1).flatten()
         
-        # НОРМАЛИЗАЦИЯ
+
         stereo = stereo / np.max(np.abs(stereo)) * 0.92
         audio = (stereo * 32767).astype(np.int16)
         
-        # СОХРАНЕНИЕ
+
         os.makedirs('generated', exist_ok=True)
         filename = f"master_{genre}_{mood}_{length_min}min_{tempo_bpm}bpm.wav"
         filepath = os.path.join('generated', filename)

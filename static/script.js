@@ -19,13 +19,13 @@ document.querySelectorAll(".presetCard").forEach(card => {
             .forEach(c => c.classList.remove("presetCardActive"));
         card.classList.add("presetCardActive");
         
-        // Автозаполнение при выборе пресета
+
         const genre = card.dataset.genre;
         const mood = card.dataset.mood;
         
-        // Устанавливаем жанр
+
         document.querySelector(`#genreChipGroup button[genre="${genre}"]`)?.click();
-        // Устанавливаем настроение
+
         document.querySelector(`#moodChipGroup button[mood="${mood}"]`)?.click();
     });
 });
@@ -57,12 +57,11 @@ tempoSlider.addEventListener("input", () => {
     tempoLabel.textContent = `${tempoSlider.value} BPM`;
 });
 
-// НОВАЯ ЛОГИКА ГЕНЕРАЦИИ
 document.getElementById("generateMusicButton").addEventListener("click", async () => {
     const generateBtn = document.getElementById("generateMusicButton");
     const resultElement = document.getElementById("generationResult");
     
-    // Показываем загрузку
+
     generateBtn.disabled = true;
     generateBtn.textContent = "Генерирую...";
     resultElement.textContent = "🎵 Создаю уникальный трек...";
