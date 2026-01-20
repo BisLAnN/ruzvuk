@@ -1,0 +1,6 @@
+[build]
+  builder = "nixpacks"
+  nixpacksVersion = "1.20.0"
+
+[deploy]
+  startCommand = "gunicorn app:app --bind 0.0.0.0:$PORT"
