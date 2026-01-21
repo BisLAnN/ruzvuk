@@ -60,7 +60,7 @@ tempoSlider.addEventListener("input", () => {
 document.getElementById("generateMusicButton").addEventListener("click", async () => {
     const generateBtn = document.getElementById("generateMusicButton");
     const resultElement = document.getElementById("generationResult");
-
+    const sessionId = localStorage.getItem('session_id'); // ✅ ДОБАВЬ
 
     generateBtn.disabled = true;
     generateBtn.textContent = "Генерирую...";
@@ -79,16 +79,26 @@ document.getElementById("generateMusicButton").addEventListener("click", async (
             return;
         }
 
+        if (!sessionId) {
+            resultElement.textContent = "❌ Ошибка авторизации!";
+            window.location.href = '/sso.html';
+            return;
+        }
+
         const response = await fetch('/generate_music', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-Session-ID': sessionId  // ✅ ДОБАВЬ
+            },
             body: JSON.stringify({
                 genre: genreChip,
                 mood: moodChip,
                 instrument: instrumentChip,
                 length: lengthValue,
                 tempo: tempoValue,
-                description: descriptionValue
+                description: descriptionValue,
+                session_id: sessionId  // ✅ ДОБАВЬ
             })
         });
 
@@ -110,6 +120,7 @@ document.getElementById("generateMusicButton").addEventListener("click", async (
         generateBtn.textContent = "Сгенерировать музыку";
     }
 });
+
 
 async function checkAuthStatus() {
     const sessionId = localStorage.getItem('session_id');
@@ -166,3 +177,25 @@ document.getElementById('logoutButton')?.addEventListener('click', async () => {
 });
 
 window.addEventListener('load', checkAuthStatus);
+
+// 🔗 НАВИГАЦИЯ МЕЖДУ СТРАНИЦАМИ
+document.addEventListener('DOMContentLoaded', function() {
+    // Кнопка "Результаты" → /results
+    document.querySelector('.navigationButton:nth-child(2)').addEventListener('click', function() {
+        window.location.href = '/results';
+    });
+    
+    // Кнопка "Создать" → /app (на results.html понадобится)
+    document.querySelector('.navigationButton:nth-child(1)').addEventListener('click', function() {
+        window.location.href = '/app';
+    });
+    
+    // Активная вкладка
+    const navButtons = document.querySelectorAll('.navigationButton');
+    navButtons.forEach((btn, index) => {
+        btn.addEventListener('click', function() {
+            navButtons.forEach(b => b.classList.remove('navigationButtonActive'));
+            this.classList.add('navigationButtonActive');
+        });
+    });
+});
