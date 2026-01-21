@@ -43,16 +43,14 @@ body {
 
 .home-button {
     position: fixed;
+    color: #000;
     top: 20px;
-    right: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    left: 20px;
     padding: 12px 20px;
     border-radius: 25px;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 16px;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     display: flex;
     align-items: center;
     gap: 8px;

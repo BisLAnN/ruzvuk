@@ -131,20 +131,40 @@ async function checkAuthStatus() {
     window.location.href = '/sso.html';
 }
 
-document.getElementById('logoutButton')?.addEventListener('click', async () => {
-    if (confirm('Вы точно хотите выйти? Сессия будет завершена и вы перейдете на страницу входа.')) {
-        const sessionId = localStorage.getItem('session_id');
-        if (sessionId) {
-            try {
-                await fetch(`/api/logout/${sessionId}`, { method: 'POST' });
-            } catch (e) {
-                console.log('Logout API недоступен');
-            }
-        }
+let logoutResolve;
 
-        localStorage.removeItem('session_id');
-        window.location.href = '/sso.html';
-    }
+function showLogoutModal() {
+    const modal = document.getElementById('logoutModal');
+    modal.classList.add('active');
+    
+    return new Promise((resolve) => {
+        logoutResolve = resolve;
+        
+        document.getElementById('confirmLogout').onclick = async () => {
+            modal.classList.remove('active');
+            resolve(true);
+            
+            const sessionId = localStorage.getItem('session_id');
+            if (sessionId) {
+                try {
+                    await fetch(`/api/logout/${sessionId}`, { method: 'POST' });
+                } catch (e) {
+                    console.log('Logout API недоступен');
+                }
+            }
+            localStorage.removeItem('session_id');
+            window.location.href = '/sso.html';
+        };
+        
+        document.getElementById('cancelLogout').onclick = () => {
+            modal.classList.remove('active');
+            resolve(false);
+        };
+    });
+}
+
+document.getElementById('logoutButton')?.addEventListener('click', async () => {
+    const confirmed = await showLogoutModal();
 });
 
 window.addEventListener('load', checkAuthStatus);
