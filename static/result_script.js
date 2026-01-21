@@ -10,7 +10,6 @@ async function checkAuthStatus() {
         const result = await response.json();
         if (result.success) {
             document.getElementById('logoutButton').style.display = 'inline-block';
-            document.querySelector('.subtitleText').textContent = `треки для ${result.username}`;
             loadUserFiles(sessionId);
             return true;
         }
@@ -65,7 +64,7 @@ async function loadUserFiles(sessionId) {
         }
     } catch (e) {
         console.error('Ошибка загрузки файлов:', e);
-        document.getElementById('noFiles').textContent = 'Ошибка загрузки треков';
+        document.getElementById('noFiles').textContent = 'Ошибка загрузки треков!';
     }
 }
 
@@ -87,10 +86,10 @@ async function deleteFile(filename) {
         if (response.ok) {
             loadUserFiles(sessionId);
         } else {
-            alert('Ошибка удаления');
+            alert('Ошибка удаления!');
         }
     } catch (e) {
-        alert('Ошибка удаления');
+        alert('Ошибка удаления!');
     }
 }
 
@@ -115,7 +114,6 @@ function showLogoutModal() {
     });
 }
 
-// Навигация
 document.querySelector('.navigationButton')?.addEventListener('click', () => {
     window.location.href = '/app';
 });

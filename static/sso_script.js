@@ -5,7 +5,6 @@ const showLoginLink = document.getElementById('show-login');
 const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('registerForm');
 
-// ✅ ПРАВИЛЬНЫЕ ЭЛЕМЕНТЫ СООБЩЕНИЙ
 const loginMessage = document.getElementById('login-unified-message');
 const registerMessage = document.getElementById('register-unified-message');
 
@@ -21,7 +20,6 @@ showLoginLink.addEventListener('click', () => {
     clearMessage('register');
 });
 
-// ✅ ЕДИНАЯ ФУНКЦИЯ СООБЩЕНИЙ
 function showMessage(type, text, formType) {
     const messageEl = formType === 'login' ? loginMessage : registerMessage;
     
@@ -41,7 +39,6 @@ function clearMessage(formType) {
     if (messageEl) messageEl.style.display = 'none';
 }
 
-// ✅ РЕГИСТРАЦИЯ
 registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -97,7 +94,6 @@ registerForm.addEventListener('submit', async (e) => {
     }
 });
 
-// ✅ ВХОД
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -134,7 +130,6 @@ loginForm.addEventListener('submit', async (e) => {
     }
 });
 
-// ✅ ПРОВЕРКА СЕССИИ
 window.addEventListener('load', async () => {
     const sessionId = localStorage.getItem('session_id');
     if (sessionId) {
@@ -155,7 +150,6 @@ function isValidEmail(email) {
     return emailRegex.test(email);
 }
 
-// ✅ АНИМАЦИЯ INPUT
 const inputs = document.querySelectorAll('input');
 inputs.forEach(input => {
     input.addEventListener('focus', function () {
@@ -166,7 +160,6 @@ inputs.forEach(input => {
     });
 });
 
-// ✅ КНОПКА ГЛАВНАЯ
 document.getElementById('homeButton').addEventListener('click', () => {
     window.location.href = '/';
 });
