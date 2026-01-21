@@ -171,7 +171,5 @@ inputs.forEach(input => {
 });
 
 document.getElementById('homeButton').addEventListener('click', () => {
-    if (confirm('Перейти на главную страницу? Все несохраненные данные будут потеряны.')) {
-        window.location.href = '/';
-    }
+    window.location.href = '/';
 });
