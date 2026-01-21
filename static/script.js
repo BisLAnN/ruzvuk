@@ -120,8 +120,6 @@ async function checkAuthStatus() {
             if (result.success) {
 
                 document.getElementById('logoutButton').style.display = 'inline-block';
-                document.querySelector('.subtitleText').textContent =
-                    `веб-приложение для ${result.username}`;
                 return;
             }
         } catch (e) {
