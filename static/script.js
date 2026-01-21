@@ -19,13 +19,10 @@ document.querySelectorAll(".presetCard").forEach(card => {
             .forEach(c => c.classList.remove("presetCardActive"));
         card.classList.add("presetCardActive");
 
-
         const genre = card.dataset.genre;
         const mood = card.dataset.mood;
 
-
         document.querySelector(`#genreChipGroup button[genre="${genre}"]`)?.click();
-
         document.querySelector(`#moodChipGroup button[mood="${mood}"]`)?.click();
     });
 });
@@ -50,7 +47,6 @@ lengthSlider.addEventListener("input", () => {
     lengthLabel.textContent = `${value} ${minutesText}`;
 });
 
-
 const tempoSlider = document.getElementById("tempoSlider");
 const tempoLabel = document.getElementById("tempoLabel");
 tempoSlider.addEventListener("input", () => {
@@ -60,7 +56,7 @@ tempoSlider.addEventListener("input", () => {
 document.getElementById("generateMusicButton").addEventListener("click", async () => {
     const generateBtn = document.getElementById("generateMusicButton");
     const resultElement = document.getElementById("generationResult");
-    const sessionId = localStorage.getItem('session_id'); // ✅ ДОБАВЬ
+    const sessionId = localStorage.getItem('session_id');
 
     generateBtn.disabled = true;
     generateBtn.textContent = "Генерирую...";
@@ -75,12 +71,20 @@ document.getElementById("generateMusicButton").addEventListener("click", async (
         const descriptionValue = document.getElementById("descriptionInput").value.trim();
 
         if (!genreChip || !moodChip || !instrumentChip) {
-            resultElement.textContent = "❌ Выберите жанр, настроение и инструменты!";
+            resultElement.innerHTML = `
+                ❌ <strong>Выберите:</strong><br>
+                • Жанр<br>
+                • Настроение<br>
+                • Инструменты
+            `;
             return;
         }
 
         if (!sessionId) {
-            resultElement.textContent = "❌ Ошибка авторизации!";
+            resultElement.innerHTML = `
+                ❌ <strong>Ошибка авторизации!</strong><br>
+                Войдите в аккаунт
+            `;
             window.location.href = '/sso.html';
             return;
         }
@@ -89,7 +93,7 @@ document.getElementById("generateMusicButton").addEventListener("click", async (
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'X-Session-ID': sessionId  // ✅ ДОБАВЬ
+                'X-Session-ID': sessionId
             },
             body: JSON.stringify({
                 genre: genreChip,
@@ -98,29 +102,49 @@ document.getElementById("generateMusicButton").addEventListener("click", async (
                 length: lengthValue,
                 tempo: tempoValue,
                 description: descriptionValue,
-                session_id: sessionId  // ✅ ДОБАВЬ
+                session_id: sessionId
             })
         });
 
         const result = await response.json();
 
         if (result.success) {
+            // ✅ АВТОСКАЧИВАНИЕ БЕЗ КНОПКИ
+            const downloadLink = document.createElement('a');
+            downloadLink.href = result.download_url;
+            downloadLink.download = `ruzvuk_${result.filename}`;
+            downloadLink.style.display = 'none';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+
+            // ✅ ПОДСКАЗКИ ПОД КНОПКОЙ
             resultElement.innerHTML = `
-                ✅ <strong>Трек готов!</strong><br>
-                <a href="${result.download_url}" download class="download-link">📥 Скачать MP3</a>
+                ✅ <strong>🎵 Трек готов и скачивается!</strong><br><br>
+                <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; border-left: 4px solid #0ea5e9; margin-top: 10px; font-size: 14px;">
+                    <strong>💡 Советы:</strong><br>
+                    • Файл сохранился в <strong>Загрузки</strong><br>
+                    • <strong>"Результаты"</strong> → управление треками<br>
+                    • Создайте новый трек для плейлиста 🎶
+                </div>
             `;
         } else {
-            resultElement.textContent = `❌ Ошибка: ${result.error}`;
+            resultElement.innerHTML = `
+                ❌ <strong>Ошибка:</strong><br>
+                ${result.error || 'Неизвестная ошибка'}
+            `;
         }
     } catch (error) {
-        resultElement.textContent = "❌ Ошибка соединения с сервером";
+        resultElement.innerHTML = `
+            ❌ <strong>Нет соединения</strong><br>
+            Проверьте интернет и обновите страницу
+        `;
         console.error(error);
     } finally {
         generateBtn.disabled = false;
-        generateBtn.textContent = "Сгенерировать музыку";
+        generateBtn.textContent = "🎵 Сгенерировать новый трек";
     }
 });
-
 
 async function checkAuthStatus() {
     const sessionId = localStorage.getItem('session_id');
@@ -129,7 +153,6 @@ async function checkAuthStatus() {
             const response = await fetch(`/api/check-session/${sessionId}`);
             const result = await response.json();
             if (result.success) {
-
                 document.getElementById('logoutButton').style.display = 'inline-block';
                 return;
             }
@@ -180,20 +203,20 @@ window.addEventListener('load', checkAuthStatus);
 
 // 🔗 НАВИГАЦИЯ МЕЖДУ СТРАНИЦАМИ
 document.addEventListener('DOMContentLoaded', function() {
-    // Кнопка "Результаты" → /results
-    document.querySelector('.navigationButton:nth-child(2)').addEventListener('click', function() {
+    // Кнопка "Результаты" → /result
+    document.querySelector('.navigationButton:nth-child(2)')?.addEventListener('click', function() {
         window.location.href = '/result';
     });
     
-    // Кнопка "Создать" → /app (на results.html понадобится)
-    document.querySelector('.navigationButton:nth-child(1)').addEventListener('click', function() {
+    // Кнопка "Создать" → /app
+    document.querySelector('.navigationButton:nth-child(1)')?.addEventListener('click', function() {
         window.location.href = '/app';
     });
     
     // Активная вкладка
     const navButtons = document.querySelectorAll('.navigationButton');
-    navButtons.forEach((btn, index) => {
-        btn.addEventListener('click', function() {
+    navButtons.forEach((btn) => {
+        btn.addEventListener('click', function(e) {
             navButtons.forEach(b => b.classList.remove('navigationButtonActive'));
             this.classList.add('navigationButtonActive');
         });
