@@ -5,7 +5,6 @@ from music_generator import ProMusicGenerator as SimpleMusicGenerator
 import json
 import os
 from datetime import datetime
-from flask import request, jsonify
 
 def load_users():
     filepath = 'users.json'
@@ -113,6 +112,9 @@ def music_app():
 def static_files(filename):
     return send_from_directory('static', filename)
 
+@app.route('/sso.html')
+def sso_page():
+    return send_from_directory('sso', 'sso.html')
 
 @app.route('/<path:path>')
 def catch_all(path):
