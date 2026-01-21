@@ -4,6 +4,9 @@ import os
 import json
 from datetime import datetime
 from music_generator import ProMusicGenerator as SimpleMusicGenerator
+import uuid
+import time
+
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 CORS(app)
@@ -115,12 +118,15 @@ def catch_all(path):
     except FileNotFoundError:
         return send_from_directory('static', 'index.html')
 
-# 🎵 МУЗЫКА
+
 @app.route('/generate_music', methods=['POST'])
 def generate_music():
     try:
         data = request.json
         print(f"Получены параметры: {data}")
+        
+        # Получаем session_id из localStorage (через JS) или headers
+        session_id = request.headers.get('X-Session-ID') or data.get('session_id')
         
         filename = generator.generate_music(
             data.get('genre', 'Поп'),
@@ -128,13 +134,36 @@ def generate_music():
             data.get('instrument', 'Электронные'),
             int(data.get('length', 2)),
             int(data.get('tempo', 120)),
-            data.get('description', '')
+            data.get('description', 'Новый трек')
         )
+        
+        # ✅ ПЕРЕМЕСТИТЬ ФАЙЛ В ПАПКУ ПОЛЬЗОВАТЕЛЯ
+        old_path = os.path.join('generated', filename)
+        new_path = os.path.join(UPLOAD_FOLDER, filename)
+        
+        if os.path.exists(old_path):
+            os.rename(old_path, new_path)
+        
+        # ✅ СОХРАНИТЬ В users.json
+        if session_id:
+            users = load_users()
+            if session_id in users['sessions']:
+                if 'files' not in users['sessions'][session_id]:
+                    users['sessions'][session_id]['files'] = []
+                
+                file_info = {
+                    'name': data.get('description', 'Новый трек')[:50],
+                    'filename': filename,
+                    'size': os.path.getsize(new_path),
+                    'created': time.time()
+                }
+                users['sessions'][session_id]['files'].append(file_info)
+                save_users(users)
         
         return jsonify({
             'success': True, 
             'filename': filename,
-            'download_url': f'/download/{filename}'
+            'download_url': f'/files/{filename}'
         })
     except Exception as e:
         print(f"Ошибка: {e}")
@@ -146,6 +175,63 @@ def download(filename):
     if os.path.exists(filepath):
         return send_file(filepath, as_attachment=True)
     return "Файл не найден", 404
+
+UPLOAD_FOLDER = 'static/files'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# 🔐 API ЛОГАУТ (обнови - добавь очистку files)
+@app.route('/api/logout/<session_id>', methods=['POST'])
+def logout(session_id):
+    try:
+        users = load_users()
+        if session_id in users['sessions']:
+            # ✅ ОЧИСТИТЬ ФАЙЛЫ ПРИ ЛОГАУТЕ (опционально)
+            session_files = users['sessions'][session_id].get('files', [])
+            for file_info in session_files:
+                file_path = os.path.join(UPLOAD_FOLDER, file_info['filename'])
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            del users['sessions'][session_id]
+            save_users(users)
+        return jsonify({'success': True})
+    except:
+        return jsonify({'success': True})
+
+# 📋 API СПИСОК ФАЙЛОВ ПОЛЬЗОВАТЕЛЯ
+@app.route('/api/user-files/<session_id>')
+def user_files(session_id):
+    try:
+        users = load_users()
+        session = users['sessions'].get(session_id, {})
+        files = session.get('files', [])
+        return jsonify({'success': True, 'files': files})
+    except:
+        return jsonify({'success': False, 'files': []})
+
+# 🗑️ API УДАЛЕНИЕ ФАЙЛА
+@app.route('/api/delete-file/<session_id>/<filename>', methods=['DELETE'])
+def delete_file(session_id, filename):
+    try:
+        users = load_users()
+        if session_id in users['sessions']:
+            # Удалить из JSON
+            users['sessions'][session_id]['files'] = [
+                f for f in users['sessions'][session_id].get('files', [])
+                if f['filename'] != filename
+            ]
+            # Удалить физический файл
+            file_path = os.path.join(UPLOAD_FOLDER, filename)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            save_users(users)
+        return jsonify({'success': True})
+    except:
+        return jsonify({'success': False})
+
+# 📥 СКАЧИВАНИЕ ФАЙЛА
+@app.route('/files/<filename>')
+def download_user_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True) 
 
 @app.route('/api/logout/<session_id>', methods=['POST'])
 def logout(session_id):
@@ -164,6 +250,12 @@ def tilda_webhook():
     data = request.form
     print("🎉 Tilda форма:", dict(data))
     return jsonify({"status": "success"})
+
+# Добавь в конец app.py ПЕРЕД if __name__:
+@app.route('/results')
+def results_page():
+    return send_from_directory('static', 'results.html')
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

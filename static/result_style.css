@@ -1,0 +1,60 @@
+.filesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.fileCard {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+.fileCard:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.fileInfo {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.fileInfo i { font-size: 2rem; color: #4f46e5; }
+
+.fileActions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.btn-download, .btn-delete {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.btn-download {
+    background: #10b981;
+    color: white;
+}
+
+.btn-delete {
+    background: #ef4444;
+    color: white;
+}
+
+.no-files {
+    text-align: center;
+    color: #6b7280;
+    font-size: 1.1rem;
+    margin-top: 40px;
+}
