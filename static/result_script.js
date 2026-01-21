@@ -11,7 +11,6 @@ async function checkAuthStatus() {
         const result = await response.json();
         if (result.success) {
             document.getElementById('logoutButton').style.display = 'inline-block';
-            document.querySelector('.subtitleText').textContent = `треки для ${result.username}`;
             loadUserFiles(sessionId);
             return true;
         }
