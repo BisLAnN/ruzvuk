@@ -5,7 +5,7 @@ const showLoginLink = document.getElementById('show-login');
 const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('registerForm');
 
-// ✅ ЕДИНЫЕ СООБЩЕНИЯ ДЛЯ КАЖДОЙ ФОРМЫ
+// ✅ ПРАВИЛЬНЫЕ ЭЛЕМЕНТЫ СООБЩЕНИЙ
 const loginMessage = document.getElementById('login-unified-message');
 const registerMessage = document.getElementById('register-unified-message');
 
@@ -21,16 +21,14 @@ showLoginLink.addEventListener('click', () => {
     clearMessage('register');
 });
 
-// ✅ ЕДИНАЯ ФУНКЦИЯ СООБЩЕНИЙ (error/success/process)
+// ✅ ЕДИНАЯ ФУНКЦИЯ СООБЩЕНИЙ
 function showMessage(type, text, formType) {
     const messageEl = formType === 'login' ? loginMessage : registerMessage;
     
-    // УДАЛЯЕМ СТАРЫЙ КЛАСС, добавляем новый
     messageEl.className = `unified-message ${type}`;
     messageEl.textContent = text;
     messageEl.style.display = 'block';
     
-    // Авто-скрытие для success через 3 сек
     if (type === 'success') {
         setTimeout(() => {
             messageEl.style.display = 'none';
@@ -38,10 +36,9 @@ function showMessage(type, text, formType) {
     }
 }
 
-// ✅ ОЧИСТКА СООБЩЕНИЯ
 function clearMessage(formType) {
     const messageEl = formType === 'login' ? loginMessage : registerMessage;
-    messageEl.style.display = 'none';
+    if (messageEl) messageEl.style.display = 'none';
 }
 
 // ✅ РЕГИСТРАЦИЯ
@@ -53,31 +50,26 @@ registerForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('register-password').value;
     const confirmPassword = document.getElementById('register-confirm-password').value;
 
-    // 🔴 ОШИБКА - пустые поля
     if (!username || !email || !password || !confirmPassword) {
         showMessage('error', "Пожалуйста, заполните все поля", 'register');
         return;
     }
 
-    // 🔴 ОШИБКА - пароли не совпадают
     if (password !== confirmPassword) {
         showMessage('error', "Пароли не совпадают", 'register');
         return;
     }
 
-    // 🔴 ОШИБКА - короткий пароль
     if (password.length < 6) {
         showMessage('error', "Пароль должен содержать минимум 6 символов", 'register');
         return;
     }
 
-    // 🔴 ОШИБКА - неверный email
     if (!isValidEmail(email)) {
         showMessage('error', "Введите корректный email адрес", 'register');
         return;
     }
 
-    // ⚫ ПРОЦЕСС - регистрация
     showMessage('process', 'Регистрация...', 'register');
 
     try {
@@ -90,7 +82,6 @@ registerForm.addEventListener('submit', async (e) => {
         const result = await response.json();
 
         if (result.success) {
-            // 🟢 УСПЕХ
             showMessage('success', result.message, 'register');
             setTimeout(() => {
                 registerFormContainer.classList.remove('active');
@@ -99,7 +90,6 @@ registerForm.addEventListener('submit', async (e) => {
                 clearMessage('login');
             }, 1500);
         } else {
-            // 🔴 ОШИБКА сервера
             showMessage('error', result.error || 'Ошибка регистрации!', 'register');
         }
     } catch (error) {
@@ -114,13 +104,11 @@ loginForm.addEventListener('submit', async (e) => {
     const username = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value;
 
-    // 🔴 ОШИБКА - пустые поля
     if (!username || !password) {
         showMessage('error', "Пожалуйста, заполните все поля!", 'login');
         return;
     }
 
-    // ⚫ ПРОЦЕСС - проверка
     showMessage('process', 'Проверка данных...', 'login');
 
     try {
@@ -134,13 +122,11 @@ loginForm.addEventListener('submit', async (e) => {
 
         if (result.success) {
             localStorage.setItem('session_id', result.session_id);
-            // 🟢 УСПЕХ
             showMessage('success', `Добро пожаловать, ${result.username}!`, 'login');
             setTimeout(() => {
                 window.location.href = '/app';
             }, 1500);
         } else {
-            // 🔴 ОШИБКА
             showMessage('error', result.error || 'Неверный логин/пароль', 'login');
         }
     } catch (error) {
@@ -148,7 +134,7 @@ loginForm.addEventListener('submit', async (e) => {
     }
 });
 
-// ✅ ПРОВЕРКА СЕССИИ ПРИ ЗАГРУЗКЕ
+// ✅ ПРОВЕРКА СЕССИИ
 window.addEventListener('load', async () => {
     const sessionId = localStorage.getItem('session_id');
     if (sessionId) {
@@ -169,7 +155,7 @@ function isValidEmail(email) {
     return emailRegex.test(email);
 }
 
-// ✅ АНИМАЦИЯ ИКОНОК INPUT
+// ✅ АНИМАЦИЯ INPUT
 const inputs = document.querySelectorAll('input');
 inputs.forEach(input => {
     input.addEventListener('focus', function () {
@@ -180,6 +166,7 @@ inputs.forEach(input => {
     });
 });
 
+// ✅ КНОПКА ГЛАВНАЯ
 document.getElementById('homeButton').addEventListener('click', () => {
     window.location.href = '/';
 });
