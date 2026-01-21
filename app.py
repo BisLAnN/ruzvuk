@@ -114,9 +114,9 @@ def tilda_redirect():
 def music_app():
     return send_from_directory('static', 'index.html')
 
-@app.route('/results')
+@app.route('/result')
 def results_page():
-    return send_from_directory('static', 'results.html')
+    return send_from_directory('static', 'result.html')
 
 @app.route('/<path:path>')
 def catch_all(path):

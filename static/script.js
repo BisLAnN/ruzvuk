@@ -182,7 +182,7 @@ window.addEventListener('load', checkAuthStatus);
 document.addEventListener('DOMContentLoaded', function() {
     // Кнопка "Результаты" → /results
     document.querySelector('.navigationButton:nth-child(2)').addEventListener('click', function() {
-        window.location.href = '/results';
+        window.location.href = '/result';
     });
     
     // Кнопка "Создать" → /app (на results.html понадобится)

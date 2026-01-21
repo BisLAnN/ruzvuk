@@ -107,6 +107,8 @@ function showLogoutModal() {
 }
 
 document.getElementById('logoutButton')?.addEventListener('click', showLogoutModal);
-document.querySelector('.navigationButton:first-child').onclick = () => window.location.href = '/app';
+document.querySelector('.navigationButton').addEventListener('click', () => {
+    window.location.href = '/app';  // ✅ /app
+});
 
 window.addEventListener('load', checkAuthStatus);
