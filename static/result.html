@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ruzvuk - мои треки</title>
-    <link rel="stylesheet" href="result_style.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="result_style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div id="logoutModal" class="logout-modal">
         <div class="modal-content">
             <div class="modal-icon">🚪</div>
-            <h3 style="color: #000;">Выход из аккаунта</h3>
-            <p style="color: #000;">Сессия будет завершена. Вы перейдете на страницу входа</p>
+            <h3>Выход из аккаунта</h3>
+            <p>Сессия будет завершена</p>
             <div class="modal-buttons">
                 <button id="confirmLogout" class="btn-confirm">Выйти</button>
                 <button id="cancelLogout" class="btn-cancel">Остаться</button>
@@ -24,10 +24,10 @@
     <header class="topHeader">
         <div class="logoBlock">
             <h1 class="mainTitle">Ruzvuk</h1>
-            <p class="subtitleText">веб-приложение для генерации музыки с помощью нейросетей</p>
+            <p class="subtitleText">ваши сгенерированные треки</p>
         </div>
         <nav class="topNavigation">
-            <button class="navigationButton"><i class="fas fa-arrow-left"></i> Создать</button>
+            <button class="navigationButton">Создать</button>
             <button class="navigationButton navigationButtonActive">Результаты</button>
             <button id="logoutButton" class="navigationButton" style="display: none; background: #dc3545; color: white;">
                 <i class="fas fa-sign-out-alt"></i> Выйти
@@ -37,15 +37,12 @@
 
     <main class="mainContainer">
         <section class="sectionBlock">
-            <h2 class="sectionTitle">Ваши треки: </h2>
-            <div id="filesGrid" class="filesGrid">
-
-            </div>
-            <p id="noFiles" class="no-files">Сгенерируйте первый трек в разделе "Создать"</p>
+            <h2 class="sectionTitle">Ваши треки <span id="fileCount">0</span></h2>
+            <div id="filesGrid" class="filesGrid"></div>
+            <p id="noFiles" class="no-files">Сгенерируйте первый трек в разделе "Создать" 🎵</p>
         </section>
     </main>
 
     <script src="result_script.js"></script>
-    <script src="script.js"></script>
 </body>
 </html>
