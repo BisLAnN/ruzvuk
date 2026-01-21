@@ -7,12 +7,15 @@ from music_generator import ProMusicGenerator as SimpleMusicGenerator
 import uuid
 import time
 
-
 app = Flask(__name__, static_folder='static', static_url_path='')
 CORS(app)
 
 generator = SimpleMusicGenerator()
 os.makedirs('generated', exist_ok=True)
+
+# ✅ UPLOAD_FOLDER В НАЧАЛЕ
+UPLOAD_FOLDER = 'static/files'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # 🔐 SSO ФУНКЦИИ
 def load_users():
@@ -111,6 +114,10 @@ def tilda_redirect():
 def music_app():
     return send_from_directory('static', 'index.html')
 
+@app.route('/results')
+def results_page():
+    return send_from_directory('static', 'results.html')
+
 @app.route('/<path:path>')
 def catch_all(path):
     try:
@@ -118,14 +125,14 @@ def catch_all(path):
     except FileNotFoundError:
         return send_from_directory('static', 'index.html')
 
-
+# 🎵 МУЗЫКА (ИСПРАВЛЕНО)
 @app.route('/generate_music', methods=['POST'])
 def generate_music():
     try:
         data = request.json
         print(f"Получены параметры: {data}")
         
-        # Получаем session_id из localStorage (через JS) или headers
+        # Получаем session_id
         session_id = request.headers.get('X-Session-ID') or data.get('session_id')
         
         filename = generator.generate_music(
@@ -137,7 +144,7 @@ def generate_music():
             data.get('description', 'Новый трек')
         )
         
-        # ✅ ПЕРЕМЕСТИТЬ ФАЙЛ В ПАПКУ ПОЛЬЗОВАТЕЛЯ
+        # ✅ ПЕРЕМЕСТИТЬ ФАЙЛ
         old_path = os.path.join('generated', filename)
         new_path = os.path.join(UPLOAD_FOLDER, filename)
         
@@ -166,7 +173,7 @@ def generate_music():
             'download_url': f'/files/{filename}'
         })
     except Exception as e:
-        print(f"Ошибка: {e}")
+        print(f"Ошибка генерации: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/download/<filename>')
@@ -176,16 +183,13 @@ def download(filename):
         return send_file(filepath, as_attachment=True)
     return "Файл не найден", 404
 
-UPLOAD_FOLDER = 'static/files'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-# 🔐 API ЛОГАУТ (обнови - добавь очистку files)
+# 🔐 API ЛОГАУТ (ЕДИНСТВЕННЫЙ)
 @app.route('/api/logout/<session_id>', methods=['POST'])
 def logout(session_id):
     try:
         users = load_users()
         if session_id in users['sessions']:
-            # ✅ ОЧИСТИТЬ ФАЙЛЫ ПРИ ЛОГАУТЕ (опционально)
+            # ✅ ОЧИСТИТЬ ФАЙЛЫ ПРИ ЛОГАУТЕ
             session_files = users['sessions'][session_id].get('files', [])
             for file_info in session_files:
                 file_path = os.path.join(UPLOAD_FOLDER, file_info['filename'])
@@ -197,7 +201,7 @@ def logout(session_id):
     except:
         return jsonify({'success': True})
 
-# 📋 API СПИСОК ФАЙЛОВ ПОЛЬЗОВАТЕЛЯ
+# 📋 API СПИСОК ФАЙЛОВ
 @app.route('/api/user-files/<session_id>')
 def user_files(session_id):
     try:
@@ -214,12 +218,10 @@ def delete_file(session_id, filename):
     try:
         users = load_users()
         if session_id in users['sessions']:
-            # Удалить из JSON
             users['sessions'][session_id]['files'] = [
                 f for f in users['sessions'][session_id].get('files', [])
                 if f['filename'] != filename
             ]
-            # Удалить физический файл
             file_path = os.path.join(UPLOAD_FOLDER, filename)
             if os.path.exists(file_path):
                 os.remove(file_path)
@@ -228,21 +230,10 @@ def delete_file(session_id, filename):
     except:
         return jsonify({'success': False})
 
-# 📥 СКАЧИВАНИЕ ФАЙЛА
+# 📥 СКАЧИВАНИЕ ФАЙЛА ПОЛЬЗОВАТЕЛЯ
 @app.route('/files/<filename>')
 def download_user_file(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True) 
-
-@app.route('/api/logout/<session_id>', methods=['POST'])
-def logout(session_id):
-    try:
-        users = load_users()
-        if session_id in users['sessions']:
-            del users['sessions'][session_id]
-            save_users(users)
-        return jsonify({'success': True})
-    except:
-        return jsonify({'success': True})
+    return send_from_directory(UPLOAD_FOLDER, filename, as_attachment=True)
 
 # 📤 TILDA WEBHOOK
 @app.route('/api/webhook', methods=['POST'])
@@ -250,12 +241,6 @@ def tilda_webhook():
     data = request.form
     print("🎉 Tilda форма:", dict(data))
     return jsonify({"status": "success"})
-
-# Добавь в конец app.py ПЕРЕД if __name__:
-@app.route('/results')
-def results_page():
-    return send_from_directory('static', 'results.html')
-
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
