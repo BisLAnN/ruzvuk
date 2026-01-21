@@ -147,6 +147,17 @@ def download(filename):
         return send_file(filepath, as_attachment=True)
     return "Файл не найден", 404
 
+@app.route('/api/logout/<session_id>', methods=['POST'])
+def logout(session_id):
+    try:
+        users = load_users()
+        if session_id in users['sessions']:
+            del users['sessions'][session_id]
+            save_users(users)
+        return jsonify({'success': True})
+    except:
+        return jsonify({'success': True})
+
 # 📤 TILDA WEBHOOK
 @app.route('/api/webhook', methods=['POST'])
 def tilda_webhook():

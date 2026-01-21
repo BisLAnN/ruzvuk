@@ -110,3 +110,43 @@ document.getElementById("generateMusicButton").addEventListener("click", async (
         generateBtn.textContent = "Сгенерировать музыку";
     }
 });
+
+async function checkAuthStatus() {
+    const sessionId = localStorage.getItem('session_id');
+    if (sessionId) {
+        try {
+            const response = await fetch(`/api/check-session/${sessionId}`);
+            const result = await response.json();
+            if (result.success) {
+                // Пользователь авторизован — показываем кнопку выхода
+                document.getElementById('logoutButton').style.display = 'inline-block';
+                document.querySelector('.subtitleText').textContent = 
+                    `веб-приложение для ${result.username}`;
+                return;
+            }
+        } catch (e) {
+            console.log('Сессия истекла');
+        }
+    }
+    // Не авторизован — редирект на SSO
+    window.location.href = '/sso.html';
+}
+
+// 🔐 КНОПКА ВЫХОДА
+document.getElementById('logoutButton')?.addEventListener('click', async () => {
+    const sessionId = localStorage.getItem('session_id');
+    if (sessionId) {
+        try {
+            await fetch(`/api/logout/${sessionId}`, { method: 'POST' });
+        } catch (e) {
+            console.log('Logout API недоступен');
+        }
+    }
+    
+    // ✅ Очищаем сессию и переходим на SSO
+    localStorage.removeItem('session_id');
+    window.location.href = '/sso.html';
+});
+
+// ✅ ПРОВЕРКА ПРИ ЗАГРУЗКЕ
+window.addEventListener('load', checkAuthStatus);
