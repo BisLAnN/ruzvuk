@@ -169,3 +169,9 @@ inputs.forEach(input => {
         this.parentElement.querySelector('i').style.color = '#2e5b32';
     });
 });
+
+document.getElementById('homeButton').addEventListener('click', () => {
+    if (confirm('Перейти на главную страницу? Все несохраненные данные будут потеряны.')) {
+        window.location.href = '/';
+    }
+});

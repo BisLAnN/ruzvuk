@@ -18,11 +18,11 @@ document.querySelectorAll(".presetCard").forEach(card => {
         document.querySelectorAll(".presetCard")
             .forEach(c => c.classList.remove("presetCardActive"));
         card.classList.add("presetCardActive");
-        
+
 
         const genre = card.dataset.genre;
         const mood = card.dataset.mood;
-        
+
 
         document.querySelector(`#genreChipGroup button[genre="${genre}"]`)?.click();
 
@@ -35,7 +35,7 @@ const lengthLabel = document.getElementById("lengthLabel");
 
 lengthSlider.addEventListener("input", () => {
     const value = parseInt(lengthSlider.value);
-    
+
     let minutesText;
     if (value === 1) {
         minutesText = "минута";
@@ -46,7 +46,7 @@ lengthSlider.addEventListener("input", () => {
     } else {
         minutesText = "минут";
     }
-    
+
     lengthLabel.textContent = `${value} ${minutesText}`;
 });
 
@@ -60,7 +60,7 @@ tempoSlider.addEventListener("input", () => {
 document.getElementById("generateMusicButton").addEventListener("click", async () => {
     const generateBtn = document.getElementById("generateMusicButton");
     const resultElement = document.getElementById("generationResult");
-    
+
 
     generateBtn.disabled = true;
     generateBtn.textContent = "Генерирую...";
@@ -81,7 +81,7 @@ document.getElementById("generateMusicButton").addEventListener("click", async (
 
         const response = await fetch('/generate_music', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 genre: genreChip,
                 mood: moodChip,
@@ -91,9 +91,9 @@ document.getElementById("generateMusicButton").addEventListener("click", async (
                 description: descriptionValue
             })
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
             resultElement.innerHTML = `
                 ✅ <strong>Трек готов!</strong><br>
@@ -118,9 +118,9 @@ async function checkAuthStatus() {
             const response = await fetch(`/api/check-session/${sessionId}`);
             const result = await response.json();
             if (result.success) {
-                // Пользователь авторизован — показываем кнопку выхода
+
                 document.getElementById('logoutButton').style.display = 'inline-block';
-                document.querySelector('.subtitleText').textContent = 
+                document.querySelector('.subtitleText').textContent =
                     `веб-приложение для ${result.username}`;
                 return;
             }
@@ -128,25 +128,23 @@ async function checkAuthStatus() {
             console.log('Сессия истекла');
         }
     }
-    // Не авторизован — редирект на SSO
     window.location.href = '/sso.html';
 }
 
-// 🔐 КНОПКА ВЫХОДА
 document.getElementById('logoutButton')?.addEventListener('click', async () => {
-    const sessionId = localStorage.getItem('session_id');
-    if (sessionId) {
-        try {
-            await fetch(`/api/logout/${sessionId}`, { method: 'POST' });
-        } catch (e) {
-            console.log('Logout API недоступен');
+    if (confirm('Вы точно хотите выйти? Сессия будет завершена и вы перейдете на страницу входа.')) {
+        const sessionId = localStorage.getItem('session_id');
+        if (sessionId) {
+            try {
+                await fetch(`/api/logout/${sessionId}`, { method: 'POST' });
+            } catch (e) {
+                console.log('Logout API недоступен');
+            }
         }
+
+        localStorage.removeItem('session_id');
+        window.location.href = '/sso.html';
     }
-    
-    // ✅ Очищаем сессию и переходим на SSO
-    localStorage.removeItem('session_id');
-    window.location.href = '/sso.html';
 });
 
-// ✅ ПРОВЕРКА ПРИ ЗАГРУЗКЕ
 window.addEventListener('load', checkAuthStatus);
