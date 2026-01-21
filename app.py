@@ -2,94 +2,6 @@ from flask import Flask, request, jsonify, send_file, send_from_directory, redir
 from flask_cors import CORS
 import os
 from music_generator import ProMusicGenerator as SimpleMusicGenerator
-import json
-import os
-from datetime import datetime
-
-def load_users():
-    filepath = 'users.json'
-    if os.path.exists(filepath):
-        with open(filepath, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {"users": [], "sessions": {}}
-
-def save_users(data):
-    with open('users.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-
-@app.route('/api/register', methods=['POST'])
-def register():
-    try:
-        data = request.json
-        users = load_users()
-        
-        for user in users['users']:
-            if user['username'] == data['username']:
-                return jsonify({'success': False, 'error': 'Пользователь уже существует'}), 400
-            if user['email'] == data['email']:
-                return jsonify({'success': False, 'error': 'Email уже зарегистрирован'}), 400
-        
-        new_user = {
-            'username': data['username'],
-            'email': data['email'],
-            'password': data['password'],
-            'registered': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        }
-        
-        users['users'].append(new_user)
-        save_users(users)
-        
-        return jsonify({
-            'success': True, 
-            'message': 'Регистрация успешна! Теперь войдите.'
-        })
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-@app.route('/api/login', methods=['POST'])
-def login():
-    try:
-        data = request.json
-        users = load_users()
-        
-        for user in users['users']:
-            if (user['username'] == data['username'] and 
-                user['password'] == data['password']):
-                
-                session_id = os.urandom(32).hex()
-                users['sessions'][session_id] = {
-                    'username': user['username'],
-                    'email': user['email'],
-                    'expires': (datetime.now().timestamp() + 24*60*60)
-                }
-                save_users(users)
-                
-                return jsonify({
-                    'success': True,
-                    'session_id': session_id,
-                    'username': user['username']
-                })
-        
-        return jsonify({'success': False, 'error': 'Неверный логин/пароль'}), 401
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-@app.route('/api/check-session/<session_id>')
-def check_session(session_id):
-    try:
-        users = load_users()
-        session = users['sessions'].get(session_id)
-        
-        if session and session['expires'] > datetime.now().timestamp():
-            return jsonify({
-                'success': True,
-                'username': session['username'],
-                'email': session['email']
-            })
-        return jsonify({'success': False})
-    except:
-        return jsonify({'success': False})
-
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 CORS(app)
@@ -112,9 +24,6 @@ def music_app():
 def static_files(filename):
     return send_from_directory('static', filename)
 
-@app.route('/sso.html')
-def sso_page():
-    return send_from_directory('sso', 'sso.html')
 
 @app.route('/<path:path>')
 def catch_all(path):
